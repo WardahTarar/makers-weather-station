@@ -1,5 +1,8 @@
 const request = require('supertest');
+const requestTest = require('supertest')('http://localhost:3000');
 const app = require('../app.js');
+const nock = require('nock');
+var Weather = require('../src/models/weather.js');
 
 describe('Test API calls', () => {
   test('GET /api/data method returns 200', function(done) {
@@ -29,7 +32,7 @@ describe('Test API calls', () => {
       .send({
         data: {
           temperature: 5,
-          pressure: 5,
+          pressure: 2,
           humidity: 5,
           date: '2012-04-23'
         }
@@ -39,6 +42,25 @@ describe('Test API calls', () => {
       .expect(200)
       .end(function(err, res) {
         if (err) return done(err);
+        done();
+      });
+  });
+
+  //Error test
+  test('POST /api/data method returns 200', function(done) {
+    request(app)
+      .post('/api/data')
+      .send({
+        data: {
+          temperature: 5,
+          pressure: 'dsa',
+          humidity: 5,
+          date: '2012-04-23'
+        }
+      })
+      .end(function(err, res) {
+        if (err) return done(err);
+        expect(res.body._message).toEqual('weather_data validation failed');
         done();
       });
   });
@@ -81,11 +103,27 @@ describe('Test API calls', () => {
         expect(res.body.message).toEqual('New weather objects saved');
         done();
       });
-
-    //Not fully tested, but works up to here
   });
 
-  // How do we test delete? we need an id
+  // Error test
+  test('POST /api/data/bulkInsert method adds 2 items to db', function(done) {
+    request(app)
+      .post('/api/data/bulkInsert')
+      .send([
+        {
+          temperature: 5,
+          pressure: 'ds',
+          humidity: 5,
+          date: '2012-04-23'
+        }
+      ])
+      .end(function(err, res) {
+        if (err) return done(err);
+        expect(res.body._message).toEqual('weather_data validation failed');
+        done();
+      });
+  });
+
   test('DELETE /api/data/:weather_id method deletes 1 record out', function(done) {
     request(app)
       .delete(`/api/data/5cdb3fb39fd69469aa17b3f9`)
@@ -97,7 +135,6 @@ describe('Test API calls', () => {
       });
   });
 
-  // This works, but now it works on the main DB
   test('DELETE /destroy/all method deletes everything', function(done) {
     request(app)
       .delete('/api/destroy/all')

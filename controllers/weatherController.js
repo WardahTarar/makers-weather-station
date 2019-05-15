@@ -3,13 +3,7 @@ var Weather = require('../src/models/weather.js');
 
 // get data
 exports.index = function(req, res) {
-  Weather.getData(function(err, result) {
-    if (err) {
-      res.json({
-        status: 'error',
-        message: err
-      });
-    }
+  Weather.find({}, function(err, result) {
     res.json({
       data: result
     });
@@ -20,12 +14,6 @@ exports.index = function(req, res) {
 exports.getRecords = function(req, res) {
   let limit = parseInt(req.params.limit);
   Weather.getData(function(err, result) {
-    if (err) {
-      res.json({
-        status: 'error',
-        message: err
-      });
-    }
     res.json({
       data: result
     });
@@ -46,7 +34,7 @@ exports.insert = function(req, res) {
 
   weather.save(function(err) {
     if (err) {
-      res.json(err);
+      res.send(err);
     } else {
       res.json({
         message: 'New weather object created!',
@@ -58,11 +46,11 @@ exports.insert = function(req, res) {
 
 // insert multiple records
 exports.insertMany = function(req, res) {
-  let data = JSON.parse(req.body.data);
+  // let data = JSON.parse(req.body.data);
 
   Weather.insertMany(req, function(err) {
     if (err) {
-      res.json(err);
+      res.send(err);
     } else {
       res.json({
         message: 'New weather objects saved'
@@ -78,15 +66,11 @@ exports.delete = function(req, res) {
       _id: req.params.weather_id
     },
     function(err, weather) {
-      if (err) {
-        res.send(err);
-      } else {
-        res.json({
-          status: 'Success',
-          message: 'Weather data deleted',
-          weather: weather
-        });
-      }
+      res.json({
+        status: 'Success',
+        message: 'Weather data deleted',
+        weather: weather
+      });
     }
   );
 };
@@ -94,14 +78,10 @@ exports.delete = function(req, res) {
 // delete multiple records
 exports.deleteAll = function(req, res) {
   Weather.deleteMany({}, function(err, weather) {
-    if (err) {
-      res.send(err);
-    } else {
-      res.json({
-        status: 'Success',
-        message: 'All weather data deleted',
-        weather: weather
-      });
-    }
+    res.json({
+      status: 'Success',
+      message: 'All weather data deleted',
+      weather: weather
+    });
   });
 };

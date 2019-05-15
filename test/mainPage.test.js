@@ -1,5 +1,6 @@
 const request = require('supertest');
 const app = require('../app.js');
+const nock = require('nock');
 
 describe('Test main page index /', () => {
   test('GET / method returns 200', () => {

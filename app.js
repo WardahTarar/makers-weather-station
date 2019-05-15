@@ -7,12 +7,11 @@ var mainPageRouter = require('./routes/mainPage');
 var apiRouter = require('./routes/api');
 let bodyParser = require('body-parser');
 let mongoose = require('mongoose');
-
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views')); //view holder
-app.set('view engine', 'ejs'); // what engine is used to create views
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -39,15 +38,12 @@ app.use('/api', apiRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
-
 // error handler
 app.use(function(err, req, res, next) {
-  // Below is created for the error.ejs
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
   res.status(err.status || 500);
-
-  res.render('error'); //renders the view error.ejs
+  res.render('error');
 });
 
 module.exports = app;
