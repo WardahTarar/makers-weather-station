@@ -1,11 +1,38 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />    
+    <script src="https://d3js.org/d3.v5.min.js"></script>
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <div class = 'table-data'></div>
+
+    <table class="table">
+      <thead class="thead-dark">
+      <tr>
+        <th scope="col">Temperature</th>
+        <th scope="col">Pressure</th>
+        <th scope="col">Humidity</th>
+        <th scope="col">Recorded at</th>
+      </tr>
+      <thead>
+
+      <%weather_data.forEach(function(item) { %>
+      <tr>
+        <td><%= item.temperature %></td>
+        <td><%= item.pressure %></td>
+        <td><%= item.humidity %></td>
+        <td><%= item.date %></td>
+      </tr>
+
+      
+      <%}) %>
+
+    </table>
+
   </body>
 </html>
